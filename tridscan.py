@@ -20,6 +20,7 @@
 
 
 import re
+import six
 import string
 import os
 import sys
