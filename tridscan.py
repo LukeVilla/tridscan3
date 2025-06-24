@@ -592,7 +592,7 @@ def get_cmdline():
              description="Scan a number a number of files \
              and create a new TrID's definition.",
              prefix_chars='-/+',
-             version = "TrIDScan/Python v" + PROGRAM_VER)
+             prog = "TrIDScan/Python v" + PROGRAM_VER)
     parser.add_argument("filenames", action="store", nargs="+",
                         help="files to scan (can include path & wildcards)")
     parser.add_argument("-r", "--recurse", action="store_true", default=False,
