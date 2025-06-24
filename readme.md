@@ -1,1 +1,1 @@
-TrIDScan3 is an upgrade of Marco Pontello's [TrIDScan program](https://mark0.net/soft-tridscan-e.html) that used the [2to3 program](https://docs.python.org/3.9/library/2to3.html) to convert it to Python 3.
+TrIDScan3 is an upgrade of Marco Pontello's [TrIDScan program](https://mark0.net/soft-tridscan-e.html) that used the [Six module](https://six.readthedocs.io/) to convert it to Python 3.
