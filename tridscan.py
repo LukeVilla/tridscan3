@@ -66,10 +66,9 @@ def header_intro():
   """
   Display the usual presentation, version, (C) notices, etc.
   """
-  print
-  print "TrIDScan/Py v%s - (C) 2015-2016 By M.Pontello" % \
-        (PROGRAM_VER)
-  print
+  print()
+  print(f"TrIDScan/Py v{PROGRAM_VER} - (C) 2015-2016 By M.Pontello")
+  print()
 
 
 def GStringsFromBlock(data):
@@ -89,7 +88,7 @@ def GStringsFromBlock(data):
 
     data = data.translate(transtable)
     tokens = re.findall("[^/]+", data)
-    print "  Raw strings: %dK" % (len(tokens)/1000)
+    print("  Raw strings: %dK" % (len(tokens)/1000))
     tokens = [token.strip("' ") for token in tokens]
     return list(set(filter(fTokenisvalid, tokens)))
 
@@ -161,7 +160,7 @@ def GStringsFind(small, big):
     cc = len(small)
     lastsub = ""
     for token in small:
-        print "\r  %d:%d  " % (cc, len(token)), 
+        print("\r  %d:%d  " % (cc, len(token)))
         cc -= 1
         if (token in bigblockto006 or
             token in bigblockto008 or
@@ -175,15 +174,15 @@ def GStringsFind(small, big):
         else:
             # Try all the valid subtoken...
             cc2 = 0
-            for st in xrange(len(token) - 3):
+            for st in range(len(token) - 3):
                 cc2 += 1
                 if cc2 == 37:
                     cc2 = 0
-                    print "\r  %d:%d  " % (cc, len(token) - st), 
+                    print("\r  %d:%d  " % (cc, len(token) - st))
                     
                 # This hold a temporary dic of all the subtoken already tried
                 btoken = token[st:]
-                for en in xrange(min(MAX_STRING_SIZE, len(btoken)), 3, -1):
+                for en in range(min(MAX_STRING_SIZE, len(btoken)), 3, -1):
                     subtoken = btoken[:en]
                     if not subtoken in lastsub:
                         # Check if a subtoken is in the big list/block
@@ -222,7 +221,7 @@ def GStringsFind(small, big):
                             tokdic[subtoken] = 1
                             lastsub = subtoken
                             break # exit last for to skip smaller subtokens
-    print "\r",
+    print("\r")
     tokens = GStringsFilter(tokdic.keys())
     return tokens
 
@@ -231,7 +230,7 @@ def GStringsFilter(tokens):
     """
     Scan a list of GStrings and remove trailing zeros & spaces, duplicates, etc.
     """
-    print "  Filtering strings..."
+    print("  Filtering strings...")
     # Remove trailing zeros & spaces, and duplicates
     for i in range(len(tokens)):
         tokens[i] = tokens[i].strip("' ")
@@ -248,12 +247,12 @@ def GStringsFilter(tokens):
         cc += 1
         if cc == 137:
             cc = 0
-            print "\r  " + str(i * 100 / (tokensnum - 1)) + "%",
+            print("\r  " + str(i * 100 / (tokensnum - 1)) + "%")
         # adjust to search only on the remaining tokens
         st += len(tokens[i]) +1
         if tokens[i] in tokblocks[st:]:
             tokens[i] = ""
-    print "\r",
+    print("\r")
     # Remove empty & duplicates strings
     return list(set(filter(fTokenisvalid, tokens)))
 
@@ -319,11 +318,11 @@ def scanfiles_for_patterns(filenames, oldpatlist):
     else:
         lastheader = ""
     patlist = oldpatlist
-    print "Scanning for patterns..."
+    print("Scanning for patterns...")
     for i in range(len(filenames)):
         filename = filenames[i]
-        print "Checking file %d/%d '%s'" % (i + 1, len(filenames),
-               filename.encode(errors="replace"))
+        print("Checking file %d/%d '%s'" % (i + 1, len(filenames),
+               filename.encode(errors="replace")))
         header = LoadHeaderFromFile(filename)
         if len(patlist):
             mask, lastheader = Patterns2MaskBlock(patlist)
@@ -332,11 +331,11 @@ def scanfiles_for_patterns(filenames, oldpatlist):
                 break
         else:
             mask = [True] * min(len(header), len(lastheader))
-            if lastheader <> "":
+            if lastheader != "":
                 patlist = PatternsFinder(header, lastheader, mask)
         lastheader = header
         if len(patlist):
-            print "  Pattern(s) found: %d" % (len(patlist))
+            print("  Pattern(s) found: %d" % (len(patlist)))
     return patlist
 
 
@@ -345,11 +344,11 @@ def scanfiles_for_strings(filenames, oldtokens):
     Scan a list of filenames and return a list of unique strings.
     """
     tokens = []
-    print "Scanning for strings..."
+    print("Scanning for strings...")
     for i in range(len(filenames)):
         filename = filenames[i]
-        print "Analyzing file %d/%d '%s'" % (i + 1, len(filenames),
-              filename.encode(errors="replace"))
+        print("Analyzing file %d/%d '%s'" % (i + 1, len(filenames),
+              filename.encode(errors="replace")))
         data = LoadDataFromFile(filename)
         if i > 0:
             #take a shortcut if there are few tokens to check
@@ -363,9 +362,9 @@ def scanfiles_for_strings(filenames, oldtokens):
                 subcheck = True
             #check all the tokens & subtokens
             if subcheck:
-                print "Parsing..."
+                print("Parsing...")
                 big = GStringsFromBlock(data)
-                print "  Checking strings..."
+                print("  Checking strings...")
                 tokens = GStringsFind(tokens, big)
         else:
             big = GStringsFromBlock(data)
@@ -375,7 +374,7 @@ def scanfiles_for_strings(filenames, oldtokens):
                 #if not refining, start with the 1st file's tokens
                 tokens = big
         #stop if there are no more strings
-        print "  String(s) found:", len(tokens), "    "
+        print("  String(s) found:", len(tokens), "    ")
         if len(tokens) == 0:
             break
     return tokens
@@ -400,7 +399,7 @@ class SimpleXML():
         self.level = 0
         self.lines = []
     def add(self, tag, content=None):
-        if content <> None:
+        if content != None:
             self.lines += ["%s<%s>%s</%s>" % (
                           "\t" * self.level, tag, content, tag.split()[0])]
         else:
@@ -491,18 +490,18 @@ def write_triddef(triddef, filename, backup=True):
                 if os.path.exists(backup_filename):
                     os.remove(backup_filename)
                 os.rename(filename, backup_filename)
-                print "Existing '%s' back up as '%s'" % (filename, backup_filename)
-        except (IOError, OSError, WindowsError), v:
+                print("Existing '%s' back up as '%s'" % (filename, backup_filename))
+        except (IOError, OSError, WindowsError) as v:
             errprint("I/O Error: %s" % str(v.strerror), v.filename)
             sys.exit(1)
     try:
         f = open(filename, 'w')
         f.write("\n".join(sx.get()))
         f.close()
-    except (IOError, OSError, WindowsError), v:
+    except (IOError, OSError, WindowsError) as v:
         errprint("I/O Error: %s" % str(v.strerror), v.filename)
         sys.exit(1)
-    print "New TrID's definition written as '%s'." % (filename)
+    print("New TrID's definition written as '%s'." % (filename))
 
 
 def read_cfg():
@@ -651,7 +650,7 @@ def main():
         sys.exit(1)
 
     #need at least 2 files, or 1 when refining a def
-    print "File(s) to scan found:", len(filenames)
+    print("File(s) to scan found:", len(filenames))
     minfiles = {False:2, True:1}
     if len(filenames) < minfiles[refine]:
         errprint("Error: at least %d files needed!" % (minfiles[refine]))
@@ -662,10 +661,10 @@ def main():
         #load the old definition to refine
         try:
             triddef = load_trid_def(olddeffilename)
-        except XML.ParseError, v:
+        except XML.ParseError as v:
             errprint("XML Error: %s" % (str(v.message)), olddeffilename)
             sys.exit(1)
-        except (IOError, OSError, WindowsError), v:
+        except (IOError, OSError, WindowsError) as v:
             errprint("I/O Error: %s" % str(v.strerror), v.filename)
             sys.exit(1)
 
@@ -709,8 +708,8 @@ def main():
     if len(patterns) == 0:
         errprint("Error: no patterns found!")
         sys.exit(1)
-    print "Last pattern end at offset: %d" % \
-          (patterns[-1][0] + len(patterns[-1][1]) - 1)
+    print("Last pattern end at offset: %d" % \
+          (patterns[-1][0] + len(patterns[-1][1]) - 1))
 
     #scan files for strings
     if CheckForStrings:
