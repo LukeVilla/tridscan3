@@ -26,7 +26,7 @@ import os
 import sys
 import glob
 import fnmatch
-from time import clock
+# from time import clock
 from time import localtime
 import xml.etree.ElementTree as XML
 import argparse
@@ -703,7 +703,7 @@ def main():
         triddef.ext = exts
 
     #scan files for patterns
-    tstart = clock()
+    # tstart = clock()
     patterns = scanfiles_for_patterns(filenames, triddef.patterns)
     if len(patterns) == 0:
         errprint("Error: no patterns found!")
@@ -718,7 +718,7 @@ def main():
         tokens = sorted(tokens, key=fToksortkey)
     else:
         tokens = []
-    tend = clock()
+    # tend = clock()
 
     #complete the def & write the new definition
     triddef.filenum += len(filenames)
