@@ -20,13 +20,10 @@
 
 
 import re
-import six
-import string
 import os
 import sys
 import glob
 import fnmatch
-# from time import clock
 from time import localtime
 import xml.etree.ElementTree as XML
 import argparse
@@ -260,23 +257,6 @@ def GStringsFilter(tokens):
     # Remove empty & duplicates strings
     return list(set(filter(fTokenisvalid, tokens)))
 
-def to_ascii(chrcode):
-    if int(chrcode) in range(128):
-        return chr(chrcode)
-    print(chrcode)
-    # if chrcode == 181:
-    #     return "\xb5"
-    # elif chrcode == 255:
-    #     return "\xff"
-    # elif chrcode == 179:
-    #     return "\xb3"
-    # elif chrcode == 128:
-    #     return "\x80"
-    sanitized = chr(chrcode)
-    print(sanitized)
-    print(type(sanitized))
-    return sanitized.encode(encoding="latin-1", errors="backslashreplace")
-
 def PatternsFinder(block1, block2, mask):
     """
     Return a list of pos/bytes tuples, given two blocks
@@ -291,31 +271,16 @@ def PatternsFinder(block1, block2, mask):
     matches = [False for c in mask]
     for i in range(len(mask)):
         if mask[i] == True:
-            # print(type(block1[i]))
-            # print(type(block2[i]))
-            # print(f"{block1[i]} == {block2[i]} ?", end="")
             if str(block1[i]) == str(block2[i]):
-                # print(" Yes")
                 matches[i] = True
-                # print(" No")
 
     #scan the match list to create the patterns
     patterns = []
-    # block1 = str(block1)
-    # print(type(block1str))
-    # print(block1str)
-    # print(type(block1))
     inpat = False
     for i in range(len(matches)):
         if inpat == True: #inside a pattern
             if matches[i] == True:
-                # print(block1[i])
-                # print(type(block1[i]))
-                # pattern = str(pattern)
                 pattern += block1[i]
-                # pattern += six.ensure_text(to_ascii(block1[i]), errors="backslashreplace")
-                # print(pattern)
-                # print(type(pattern))
             if matches[i] == False or i == len(matches) - 1:
                 inpat = False
                 patterns.append( (patpos, pattern) )
@@ -327,7 +292,6 @@ def PatternsFinder(block1, block2, mask):
                 inpat = True
                 if i == len(matches) - 1:
                     patterns.append( (patpos, pattern) )
-    print(len(patterns))
     return patterns
 
 
@@ -338,7 +302,6 @@ def Patterns2MaskBlock(patterns):
     mask = [False] * HEADER_FRONT_SIZE
     block = ["*"] * HEADER_FRONT_SIZE
     for pat in patterns:
-        # print(pat)
         pos = pat[0]
         bytes = pat[1]
         mask = mask[:pos] + [True] * len(bytes) + mask[pos + len(bytes):]
@@ -363,9 +326,7 @@ def scanfiles_for_patterns(filenames, oldpatlist):
                filename.encode(errors="replace")))
         header = LoadHeaderFromFile(filename)
         if len(patlist):
-            # print(patlist)
             mask, lastheader = Patterns2MaskBlock(patlist)
-            # print(lastheader)
             patlist = PatternsFinder(header, lastheader, mask)
             if len(patlist) == 0:
                 break
@@ -723,6 +684,7 @@ def main():
         triddef.email = defdata["email"]
         triddef.home = defdata["home"]
         triddef.mime = "application/octet-stream" # temporary addition!
+        # Not so temporary after all, given that the last update was in 2016...
         CheckForStrings = True
 
     #check command line overrides
@@ -745,7 +707,6 @@ def main():
     #scan files for patterns
     # tstart = clock()
     patterns = scanfiles_for_patterns(filenames, triddef.patterns)
-    print(type(patterns))
     if len(patterns) == 0:
         errprint("Error: no patterns found!")
         sys.exit(1)
@@ -759,7 +720,6 @@ def main():
         tokens = sorted(tokens, key=fToksortkey)
     else:
         tokens = []
-    # tend = clock()
 
     #complete the def & write the new definition
     triddef.filenum += len(filenames)
