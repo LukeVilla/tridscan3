@@ -84,10 +84,10 @@ def GStringsFromBlock(data):
 
     tfrom = "\00" + chardelim
     tto =  "'" + "/" * len(chardelim)
-    transtable = string.maketrans(tfrom, tto)
+    transtable = bytes.maketrans(bytes([ord(char) for char in tfrom]), bytes([ord(char) for char in tto]))
 
     data = data.translate(transtable)
-    tokens = re.findall("[^/]+", data)
+    tokens = re.findall("[^/]+", str(data))
     print("  Raw strings: %dK" % (len(tokens)/1000))
     tokens = [token.strip("' ") for token in tokens]
     return list(set(filter(fTokenisvalid, tokens)))
@@ -163,7 +163,7 @@ def GStringsFind(small, big):
     cc = len(small)
     lastsub = ""
     for token in small:
-        print("\r  %d:%d  " % (cc, len(token)))
+        print("\r  %d:%d  " % (cc, len(token)), end="")
         cc -= 1
         if (token in bigblockto006 or
             token in bigblockto008 or
@@ -234,6 +234,7 @@ def GStringsFilter(tokens):
     Scan a list of GStrings and remove trailing zeros & spaces, duplicates, etc.
     """
     print("  Filtering strings...")
+    tokens = list(tokens)
     # Remove trailing zeros & spaces, and duplicates
     for i in range(len(tokens)):
         tokens[i] = tokens[i].strip("' ")
@@ -394,7 +395,7 @@ def scanfiles_for_strings(filenames, oldtokens):
             subcheck = False
             if len(tokens) < 200:
                 for token in tokens:
-                    if not token.replace("'", "\00") in data:
+                    if not bytes(ord(char) for char in token.replace("'", "\00")) in data:
                         subcheck = True
                         break
             else:
@@ -657,7 +658,7 @@ def get_cmdline():
 
 def errprint(msg, filename=os.path.basename(sys.argv[0])):
     txt = "%s: %s\n" % (filename, msg)
-    print >>sys.stderr, txt
+    print(txt, file=sys.stderr)
 
 
 def main():
@@ -745,7 +746,6 @@ def main():
     # tstart = clock()
     patterns = scanfiles_for_patterns(filenames, triddef.patterns)
     print(type(patterns))
-    print(patterns)
     if len(patterns) == 0:
         errprint("Error: no patterns found!")
         sys.exit(1)
