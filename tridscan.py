@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 #--------------------------------------------------------------------------
 # TrIDScan/Py
@@ -64,7 +64,7 @@ def header_intro():
   Display the usual presentation, version, (C) notices, etc.
   """
   print()
-  print(f"TrIDScan/Py v{PROGRAM_VER} - (C) 2015-2016 By M.Pontello")
+  print(f"TrIDScan/Py3 v{PROGRAM_VER} - (C) 2015-2016 By M.Pontello - Updated by Luke Villalobos")
   print()
 
 
@@ -462,7 +462,7 @@ def write_triddef(triddef, filename, backup=True):
     sx.add("Min", str(now[4]))
     sx.add("Sec", str(now[5]))
     sx.add("/Time")
-    sx.add("Creator", "TrIDScan/Py v" + PROGRAM_VER)
+    sx.add("Creator", "TrIDScan/Py3 v" + PROGRAM_VER)
     sx.add("/General")
 
     sx.add("FrontBlock")
