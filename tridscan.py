@@ -339,6 +339,8 @@ def scanfiles_for_patterns(filenames, oldpatlist):
             print("  Pattern(s) found: %d" % (len(patlist)))
     return patlist
 
+def btos(bytes):
+    return "".join([chr(b) for b in bytes])
 
 def scanfiles_for_strings(filenames, oldtokens):
     """
@@ -349,7 +351,7 @@ def scanfiles_for_strings(filenames, oldtokens):
     for i in range(len(filenames)):
         filename = filenames[i]
         print("Analyzing file %d/%d '%s'" % (i + 1, len(filenames),
-              filename.encode(errors="replace")))
+              btos(filename.encode(errors="replace"))))
         data = LoadDataFromFile(filename)
         if i > 0:
             #take a shortcut if there are few tokens to check
