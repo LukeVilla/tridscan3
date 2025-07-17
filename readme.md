@@ -1,1 +1,1 @@
-TrIDScan3 is an upgrade of Marco Pontello's [TrIDScan program](https://mark0.net/soft-tridscan-e.html) that used the [Six module](https://six.readthedocs.io/) to convert it to Python 3.
+TrIDScan3 is an upgrade of Marco Pontello's [TrIDScan program](https://mark0.net/soft-tridscan-e.html) that works with Python 3. It works exactly the same as the original, except I made one minor improvement: Instead of naming all the definitions `newtype.trid.xml`, it names each definition with the extension that was used to create it.
